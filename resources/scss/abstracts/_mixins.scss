@@ -1,0 +1,100 @@
+// ============================================================================
+// Mixins & functions shared by every partial
+// ============================================================================
+
+@use 'sass:map';
+@use 'tokens';
+
+// Min-width media query using the breakpoint names from _tokens.scss.
+@mixin bp($name) {
+  @media (min-width: map.get(tokens.$breakpoints, $name)) {
+    @content;
+  }
+}
+
+// Touch screens (phones, tablets): use for bigger hit areas.
+@mixin coarse {
+  @media (pointer: coarse) {
+    @content;
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// Visible keyboard focus. Uses outline (not box-shadow) so it also survives
+// Windows high-contrast mode and never fights a component's own shadow.
+@mixin focus-ring($offset: 2px) {
+  &:focus-visible {
+    outline: 2px solid rgb(var(--c-focus));
+    outline-offset: $offset;
+  }
+}
+
+// Soft ring used by text inputs (shows on :focus, not just :focus-visible).
+@mixin field-focus {
+  &:focus {
+    @apply border-focus outline-none ring-4 ring-focus/15;
+  }
+}
+
+// CSS-only spinner (no image / data-URI, so it is CSP-friendly).
+@mixin spinner($size: 1rem, $thickness: 2px, $color: currentColor) {
+  content: '';
+  display: block;
+  width: $size;
+  height: $size;
+  border-radius: 9999px;
+  border: $thickness solid $color;
+  border-right-color: transparent;
+  animation: spin 0.65s linear infinite;
+}
+
+// Thin, themed scrollbars for inner scroll containers.
+@mixin thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--c-line-strong)) transparent;
+
+  &::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: rgb(var(--c-line-strong));
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+// Frosted translucent bar (topbar, mobile tab bar).
+@mixin frosted {
+  @apply bg-surface/80 backdrop-blur-md;
+
+  @supports not (backdrop-filter: blur(1px)) {
+    @apply bg-surface;
+  }
+}
+
+// Gradient sheen laid over a solid button colour.
+@mixin sheen {
+  background-image: linear-gradient(to bottom, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0));
+}
+
+// Solid button fill: diagonal two-stop gradient under the sheen. Both stops must keep white text >= 4.5:1.
+@mixin solid-gradient($from, $to) {
+  background-image:
+    linear-gradient(to bottom, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0) 55%),
+    linear-gradient(135deg, $from 0%, $to 100%);
+}
+
+// Helpers to read a tone's utility list from the $tones map.
+@function tone($name, $key) {
+  @return map.get(map.get(tokens.$tones, $name), $key);
+}

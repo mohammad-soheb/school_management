@@ -68,6 +68,13 @@ return [
     'timezone' => 'UTC',
 
     /*
+    | Display timezone: dates and times shown to people (and school business dates such as attendance and fees)
+    | use this zone. Everything is stored in UTC.
+    */
+
+    'display_timezone' => env('APP_DISPLAY_TIMEZONE', 'Asia/Kolkata'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------

@@ -1,0 +1,49 @@
+// ============================================================================
+// Tabs (server-driven link tabs)   nav.tabs > a.tab[aria-current="page"]
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .tabs {
+    @apply flex gap-1 overflow-x-auto border-b border-line scrollbar-none;
+  }
+
+  .tab {
+    @apply relative -mb-px inline-flex min-h-[2.75rem] shrink-0 items-center gap-2 whitespace-nowrap border-b-2 border-transparent px-3.5 py-2.5 text-sm font-medium text-ink-soft;
+    @apply transition-colors duration-150 hover:text-ink;
+    @include focus-ring(-2px);
+
+    &.is-active,
+    &[aria-current='page'] {
+      @apply border-brand-500 text-brand-ink;
+    }
+
+    svg {
+      @apply h-[1.125rem] w-[1.125rem] shrink-0;
+    }
+  }
+
+  .tab-badge {
+    @apply inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-surface-muted px-1.5 text-2xs font-semibold leading-5 text-ink-soft;
+
+    .tab.is-active &,
+    .tab[aria-current='page'] & {
+      @apply bg-brand-500/10 text-brand-ink;
+    }
+  }
+
+  // Pill/segmented variant: <nav class="tabs tabs-pill">.
+  .tabs-pill {
+    @apply inline-flex w-auto gap-1 rounded-xl border-0 bg-surface-muted p-1;
+
+    .tab {
+      @apply min-h-0 rounded-lg border-0 px-3 py-1.5;
+
+      &.is-active,
+      &[aria-current='page'] {
+        @apply bg-surface text-ink shadow-card;
+      }
+    }
+  }
+}

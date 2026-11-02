@@ -1,0 +1,155 @@
+// ============================================================================
+// Buttons   .btn + .btn-{primary|secondary|ghost|danger|success} + .btn-{sm|md|lg}
+// ----------------------------------------------------------------------------
+// Solid variants share a soft top-light "sheen" over a flat colour. White text
+// on the solid colours is >= 4.5:1 (brand-600, rose-600, emerald-700).
+// `.is-loading` is added by core/submit-lock.js: label hides, a spinner shows.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .btn {
+    @apply relative inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-transparent;
+    @apply h-10 px-4 text-sm font-medium transition duration-150 ease-out;
+    @include focus-ring;
+
+    -webkit-tap-highlight-color: transparent;
+    text-decoration: none;
+
+    svg {
+      @apply h-[1.125rem] w-[1.125rem] shrink-0;
+    }
+
+    &:active:not(:disabled):not([aria-disabled='true']) {
+      @apply translate-y-px;
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      @apply cursor-not-allowed opacity-50;
+    }
+
+    // Spinner shown while a form is submitting.
+    &.is-loading {
+      @apply pointer-events-none;
+
+      color: transparent !important;
+      --btn-spinner: #fff;
+
+      svg {
+        @apply opacity-0;
+      }
+
+      &::after {
+        @include spinner(1.1rem, 2px, var(--btn-spinner));
+
+        position: absolute;
+        inset: 0;
+        margin: auto;
+      }
+
+      &:disabled {
+        @apply opacity-90;
+      }
+    }
+  }
+
+  // ---- Variants -------------------------------------------------------------
+  // Solid buttons: a subtle diagonal gradient between two shades that both keep white text >= 4.5:1,
+  // plus the top-light sheen. Hover brightens slightly and adds a coloured glow (primary).
+  .btn-primary {
+    @apply border-brand-700/60 bg-brand-600 text-white shadow-btn;
+    @apply hover:shadow-glow hover:brightness-110 active:brightness-95;
+    @include solid-gradient(#5850ec, #4338ca);
+  }
+
+  .btn-danger {
+    @apply border-rose-800/50 bg-rose-600 text-white shadow-btn;
+    @apply hover:brightness-110 active:brightness-95;
+    @include solid-gradient(#e11d48, #be123c);
+  }
+
+  .btn-success {
+    @apply border-emerald-900/50 bg-emerald-700 text-white shadow-btn;
+    @apply hover:brightness-110 active:brightness-95;
+    @include solid-gradient(#047857, #065f46);
+  }
+
+  .btn-secondary {
+    @apply border-line-strong bg-surface-raised text-ink shadow-card;
+    @apply hover:bg-surface-muted active:bg-surface-muted;
+
+    &.is-loading {
+      --btn-spinner: rgb(var(--c-ink-soft));
+    }
+  }
+
+  .btn-ghost {
+    @apply text-ink-soft;
+    @apply hover:bg-surface-muted hover:text-ink active:bg-line/60;
+
+    &.is-loading {
+      --btn-spinner: rgb(var(--c-ink-soft));
+    }
+  }
+
+  // ---- Sizes ----------------------------------------------------------------
+  .btn-sm {
+    @apply h-8 gap-1.5 rounded-lg px-3 text-xs;
+
+    svg {
+      @apply h-4 w-4;
+    }
+  }
+
+  .btn-md {
+    @apply h-10 px-4 text-sm;
+  }
+
+  .btn-lg {
+    @apply h-12 px-6 text-base;
+
+    svg {
+      @apply h-5 w-5;
+    }
+  }
+
+  // Square icon-only button: <x-ui.button class="btn-icon" aria-label="...">.
+  .btn-icon {
+    @apply w-10 px-0;
+
+    &.btn-sm {
+      @apply w-8;
+    }
+
+    &.btn-lg {
+      @apply w-12;
+    }
+  }
+
+  .btn-block {
+    @apply flex w-full;
+  }
+
+  // Touch screens: every button is at least 44px tall.
+  @include coarse {
+    .btn-sm {
+      @apply min-h-[2.5rem];
+    }
+
+    .btn-md,
+    .btn-lg {
+      @apply min-h-touch;
+    }
+
+    .btn-icon {
+      @apply min-w-touch;
+    }
+  }
+
+  // Row of buttons that wraps nicely on phones.
+  .btn-group {
+    @apply flex flex-wrap items-center gap-2;
+  }
+}

@@ -1,0 +1,4 @@
+// Abstracts: tokens (data) + mixins/functions. Emits no CSS by itself.
+// Use from a partial with: @use '../abstracts' as *;
+@forward 'tokens';
+@forward 'mixins';

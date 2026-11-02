@@ -1,0 +1,64 @@
+// ============================================================================
+// Card   .card > .card-header + .card-body + .card-footer
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-surface shadow-card;
+  }
+
+  // Whole card is a link / button (stat tiles, school pickers).
+  .card-interactive {
+    @apply transition duration-150 ease-out;
+    @include focus-ring;
+
+    &:hover {
+      @apply -translate-y-0.5 border-line-strong shadow-pop;
+    }
+  }
+
+  .card-header {
+    @apply flex flex-wrap items-start justify-between gap-x-4 gap-y-2 border-b border-line px-5 py-4 sm:px-6;
+  }
+
+  .card-title {
+    @apply text-base font-semibold leading-6 tracking-tight text-ink;
+  }
+
+  .card-description {
+    @apply mt-0.5 text-sm text-ink-soft;
+  }
+
+  .card-actions {
+    @apply flex flex-wrap items-center gap-2;
+  }
+
+  .card-body {
+    @apply p-5 sm:p-6;
+  }
+
+  .card-footer {
+    @apply flex flex-wrap items-center justify-end gap-3 rounded-b-2xl border-t border-line bg-surface-muted/60 px-5 py-3.5 sm:px-6;
+  }
+
+  // A card whose body is a table / list that should touch the edges.
+  .card-flush {
+    @apply overflow-hidden;
+
+    .table-wrap {
+      @apply rounded-none border-0 shadow-none;
+    }
+  }
+
+  // Simple vertical list inside a card (recent activity, links).
+  .list-rows {
+    @apply divide-y divide-line;
+
+    > li,
+    > .list-row {
+      @apply flex items-center gap-3 py-3 first:pt-0 last:pb-0;
+    }
+  }
+}

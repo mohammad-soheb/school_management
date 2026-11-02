@@ -1,0 +1,122 @@
+// ============================================================================
+// Guest / authentication layout: brand panel + form card
+//   .auth-shell > .auth-panel (>= lg) + .auth-main > .auth-card
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .auth-shell {
+    @apply grid min-h-screen grid-cols-1 bg-canvas lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)];
+  }
+
+  // Marketing panel. Always dark-on-gradient, regardless of the theme.
+  .auth-panel {
+    @apply relative hidden flex-col justify-between overflow-hidden p-12 text-white lg:flex xl:p-16;
+
+    background-color: #312e81;
+    background-image:
+      radial-gradient(60rem 40rem at 0% 0%, rgb(99 102 241 / 0.55), transparent 60%),
+      radial-gradient(50rem 36rem at 100% 100%, rgb(168 85 247 / 0.45), transparent 60%),
+      linear-gradient(145deg, #1e1b4b 0%, #312e81 45%, #4338ca 100%);
+
+    // Faint grid that fades out toward the corners.
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(255 255 255 / 0.07) 1px, transparent 1px);
+      background-size: 3rem 3rem;
+      mask-image: radial-gradient(ellipse at 30% 30%, #000 10%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse at 30% 30%, #000 10%, transparent 70%);
+      pointer-events: none;
+    }
+
+    > * {
+      @apply relative;
+    }
+  }
+
+  .auth-panel-brand {
+    @apply flex items-center gap-3 text-lg font-semibold tracking-tight;
+
+    .brand-tile {
+      @apply bg-white/15 shadow-none ring-1 ring-inset ring-white/25 backdrop-blur;
+    }
+  }
+
+  .auth-panel-title {
+    @apply max-w-md text-4xl font-semibold leading-[1.15] tracking-tight text-white xl:text-5xl;
+  }
+
+  .auth-panel-text {
+    @apply mt-4 max-w-md text-base leading-relaxed text-indigo-100/90;
+  }
+
+  .auth-feature-list {
+    @apply mt-10 max-w-md space-y-4;
+  }
+
+  .auth-feature {
+    @apply flex items-start gap-3.5 text-sm text-indigo-100;
+
+    strong {
+      @apply block font-semibold text-white;
+    }
+  }
+
+  .auth-feature-icon {
+    @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-inset ring-white/20;
+
+    svg {
+      @apply h-5 w-5;
+    }
+  }
+
+  .auth-panel-foot {
+    @apply text-xs text-indigo-200/80;
+  }
+
+  // ---- Form side ------------------------------------------------------------------
+  .auth-main {
+    @apply relative flex min-h-screen flex-col items-center justify-center px-4 py-12 sm:px-8;
+
+    // Soft glow behind the card (the brand panel is hidden on phones, so this carries the colour there).
+    background-image:
+      radial-gradient(36rem 22rem at 50% 0%, rgb(99 102 241 / 0.1), transparent 70%),
+      radial-gradient(30rem 20rem at 100% 100%, rgb(168 85 247 / 0.07), transparent 70%);
+  }
+
+  .auth-toolbar {
+    @apply absolute right-4 top-4 flex items-center gap-2 sm:right-6 sm:top-6;
+  }
+
+  .auth-card {
+    @apply w-full max-w-md rounded-3xl border border-line bg-surface p-6 shadow-card sm:p-8 sm:shadow-pop;
+  }
+
+  .auth-mobile-brand {
+    @apply mb-8 flex items-center justify-center gap-3 text-lg font-semibold tracking-tight text-ink lg:hidden;
+  }
+
+  .auth-heading {
+    @apply text-2xl font-semibold tracking-tight text-ink;
+  }
+
+  .auth-subheading {
+    @apply mt-1.5 text-sm leading-relaxed text-ink-soft;
+  }
+
+  .auth-footer {
+    @apply mt-8 text-center text-xs text-ink-faint;
+  }
+
+  .auth-link {
+    @apply font-medium text-brand-ink underline-offset-4 hover:underline;
+    @include focus-ring(2px);
+
+    border-radius: 0.25rem;
+  }
+}

@@ -1,0 +1,26 @@
+// ============================================================================
+// School ERP: single Sass entry point.
+// ----------------------------------------------------------------------------
+// Tailwind 3 runs through PostCSS AFTER Sass (see postcss.config.js), so Sass
+// features (@use, maps, mixins, loops, nesting) and Tailwind's @apply / @layer
+// work together in every partial. The order below is the cascade order:
+//
+//   1. tailwind base   preflight reset
+//   2. tokens + base   CSS variables, element defaults  (@layer base)
+//   3. components      .btn .card .input ...            (@layer components)
+//   4. layouts         app shell, auth, portal, print   (@layer components)
+//   5. modules         per-module partials              (@layer components)
+//   6. tailwind components / utilities   -> Tailwind injects every @layer block
+//      and its utilities here, so a utility class in a view always wins.
+//
+// Docs: docs/UI_GUIDE.md
+// ============================================================================
+
+@use 'base/tailwind-base';
+@use 'base/root';
+@use 'base/reset';
+@use 'components';
+@use 'layouts';
+@use 'modules';
+@use 'base/tailwind-components';
+@use 'base/tailwind-utilities';

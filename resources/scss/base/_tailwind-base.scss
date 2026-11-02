@@ -1,0 +1,3 @@
+// Tailwind's preflight + base layer. Kept in its own partial because Sass requires @use rules to come
+// before any other rule; app.scss @use's the three Tailwind partials in the order the layers must appear.
+@tailwind base;

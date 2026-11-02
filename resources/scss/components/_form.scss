@@ -1,0 +1,343 @@
+// ============================================================================
+// Form controls
+// ----------------------------------------------------------------------------
+// .label .hint .field-error   text around a control
+// .input .textarea .select    text-like controls (16px on phones: no iOS zoom)
+// .input-group + .input-affix prefix/suffix (rupee, %, kg ...)
+// .check .toggle .dropzone    checkbox / radio / switch / file drop-zone
+// .form-grid .form-section .form-actions   layout helpers
+// All state (focus, invalid, disabled) is handled here -- views only add
+// `aria-invalid="true"` or the `is-invalid` class.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@mixin control-base {
+  @apply block w-full min-w-0 rounded-xl border border-line-strong bg-field px-3.5 text-base text-ink shadow-sm sm:text-sm;
+  @apply transition duration-150 ease-out;
+  @apply placeholder:text-ink-faint;
+  @include field-focus;
+
+  &:hover:not(:focus):not(:disabled) {
+    @apply border-ink-faint/60;
+  }
+
+  &:disabled {
+    @apply cursor-not-allowed bg-surface-muted text-ink-faint shadow-none;
+  }
+
+  &[readonly] {
+    @apply bg-surface-muted/60;
+  }
+
+  &[aria-invalid='true'],
+  &.is-invalid {
+    @apply border-danger;
+
+    &:focus {
+      @apply border-danger ring-danger/20;
+    }
+  }
+}
+
+@layer components {
+  // ---- Text around controls --------------------------------------------------
+  .field {
+    @apply min-w-0;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-ink;
+  }
+
+  .label-required::after {
+    content: ' *';
+
+    @apply font-semibold text-danger-ink;
+  }
+
+  .hint {
+    @apply mt-1.5 text-xs text-ink-faint;
+  }
+
+  .field-error {
+    @apply mt-1.5 flex items-start gap-1.5 text-xs font-medium text-danger-ink;
+
+    svg {
+      @apply mt-px h-3.5 w-3.5 shrink-0;
+    }
+  }
+
+  // ---- Text-like controls ----------------------------------------------------
+  .input {
+    @include control-base;
+
+    @apply h-11 py-2 sm:h-10;
+
+    &[type='date'],
+    &[type='time'],
+    &[type='datetime-local'],
+    &[type='month'] {
+      @apply min-h-[2.75rem] sm:min-h-0;
+    }
+
+    &[type='file'] {
+      @apply h-auto p-1.5;
+    }
+
+    &[type='color'] {
+      @apply p-1;
+    }
+
+    &[type='number'] {
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .textarea {
+    @include control-base;
+
+    @apply min-h-[5.5rem] resize-y py-2.5 leading-relaxed;
+  }
+
+  // CSS-only chevron (two gradient strokes): no data-URI image, so it works under a strict CSP and follows the theme.
+  .select {
+    @include control-base;
+
+    @apply h-11 appearance-none py-2 pr-10 sm:h-10;
+
+    --chev: rgb(var(--c-ink-faint));
+
+    background-image:
+      linear-gradient(to top right, transparent calc(50% - 0.8px), var(--chev) calc(50% - 0.8px), var(--chev) calc(50% + 0.8px), transparent calc(50% + 0.8px)),
+      linear-gradient(to top left, transparent calc(50% - 0.8px), var(--chev) calc(50% - 0.8px), var(--chev) calc(50% + 0.8px), transparent calc(50% + 0.8px));
+    background-repeat: no-repeat;
+    background-size: 0.4375rem 0.4375rem, 0.4375rem 0.4375rem;
+    background-position:
+      calc(100% - 1.375rem) 50%,
+      calc(100% - 0.96875rem) 50%;
+
+    &[multiple],
+    &[size]:not([size='1']) {
+      @apply h-auto py-1.5 pr-3.5;
+
+      background-image: none;
+    }
+
+    option {
+      @apply bg-surface text-ink;
+    }
+  }
+
+  // ---- Prefix / suffix ---------------------------------------------------------
+  .input-group {
+    @apply flex min-w-0 items-stretch overflow-hidden rounded-xl border border-line-strong bg-field shadow-sm;
+    @apply transition duration-150 ease-out;
+
+    &:focus-within {
+      @apply border-focus ring-4 ring-focus/15;
+    }
+
+    &.is-invalid {
+      @apply border-danger;
+
+      &:focus-within {
+        @apply ring-danger/20;
+      }
+    }
+
+    .input {
+      @apply min-w-0 flex-1 rounded-none border-0 bg-transparent shadow-none ring-0;
+
+      &:focus {
+        @apply ring-0;
+      }
+    }
+  }
+
+  .input-affix {
+    @apply flex shrink-0 select-none items-center bg-surface-muted px-3 text-sm font-medium text-ink-faint;
+
+    &:first-child {
+      @apply border-r border-line-strong;
+    }
+
+    &:last-child {
+      @apply border-l border-line-strong;
+    }
+  }
+
+  // ---- Checkbox / radio ----------------------------------------------------------
+  .check {
+    @apply flex min-h-[2.25rem] cursor-pointer items-start gap-3 py-1;
+  }
+
+  .check-input {
+    @apply relative mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 cursor-pointer appearance-none rounded-md border border-line-strong bg-field;
+    @apply transition duration-150 ease-out;
+    @include focus-ring;
+
+    &[type='radio'] {
+      @apply rounded-full;
+    }
+
+    // Tick (checkbox): drawn with clip-path, no image.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0.125rem;
+      background: #fff;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.12s ease, transform 0.12s ease;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    }
+
+    &[type='radio']::after {
+      inset: 0.25rem;
+      border-radius: 9999px;
+      clip-path: none;
+    }
+
+    &:checked,
+    &:indeterminate {
+      @apply border-brand-600 bg-brand-600;
+
+      &::after {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    &:indeterminate::after {
+      inset: 0.4375rem 0.25rem;
+      clip-path: none;
+      border-radius: 9999px;
+    }
+
+    &:hover:not(:disabled):not(:checked) {
+      @apply border-brand-500;
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+
+    &[aria-invalid='true'] {
+      @apply border-danger;
+    }
+  }
+
+  .check-label {
+    @apply text-sm font-medium leading-snug text-ink;
+  }
+
+  .check-hint {
+    @apply mt-0.5 block text-xs font-normal text-ink-faint;
+  }
+
+  // ---- Switch ----------------------------------------------------------------------
+  .toggle {
+    @apply relative h-6 w-11 shrink-0 cursor-pointer appearance-none rounded-full border border-line-strong bg-line-strong/70;
+    @apply transition duration-200 ease-out;
+    @include focus-ring;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0.125rem;
+      left: 0.125rem;
+      width: 1.125rem;
+      height: 1.125rem;
+      border-radius: 9999px;
+      background: #fff;
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    &:checked {
+      @apply border-brand-600 bg-brand-600;
+
+      &::after {
+        transform: translateX(1.25rem);
+      }
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+  }
+
+  // ---- File drop-zone ------------------------------------------------------------------
+  .dropzone {
+    @apply relative flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-line-strong bg-surface-muted/50 px-4 py-6 text-center;
+    @apply transition duration-150 ease-out;
+
+    &:hover,
+    &.is-dragging {
+      @apply border-brand-500 bg-brand-500/5;
+    }
+
+    &:focus-within {
+      @apply border-focus ring-4 ring-focus/15;
+    }
+
+    &.is-invalid {
+      @apply border-danger;
+    }
+  }
+
+  .dropzone-icon {
+    @apply mb-1 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500/10 text-brand-ink;
+
+    svg {
+      @apply h-5 w-5;
+    }
+  }
+
+  // Native file input styled for places where a drop-zone is too much.
+  input[type='file'].input::file-selector-button {
+    @apply mr-3 cursor-pointer rounded-lg border-0 bg-brand-500/10 px-3 py-1.5 text-sm font-medium text-brand-ink;
+    @apply transition-colors duration-150;
+  }
+
+  // ---- Layout helpers ---------------------------------------------------------------------
+  // One column on phones, two from md up. Use `col-span-full` for wide fields.
+  .form-grid {
+    @apply grid grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-2;
+  }
+
+  .form-grid-3 {
+    @apply grid grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .form-section {
+    @apply space-y-5;
+
+    + .form-section {
+      @apply mt-8 border-t border-line pt-8;
+    }
+  }
+
+  .form-section-title {
+    @apply text-sm font-semibold text-ink;
+  }
+
+  .form-section-description {
+    @apply mt-0.5 text-sm text-ink-soft;
+  }
+
+  // Button row at the end of a form. `.is-sticky` keeps it reachable on long phone forms.
+  .form-actions {
+    @apply flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end;
+
+    &.is-sticky {
+      @apply sticky bottom-0 z-10 -mx-4 border-t border-line bg-surface/90 px-4 py-3 backdrop-blur-md sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none;
+      @apply pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-0;
+    }
+
+    .btn {
+      @apply w-full sm:w-auto;
+    }
+  }
+}

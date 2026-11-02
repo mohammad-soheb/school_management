@@ -1,21 +1,26 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import { bunny } from 'laravel-vite-plugin/fonts';
-import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            // Single Sass entry (Tailwind runs through PostCSS after Sass) + single JS entry.
+            input: ['resources/scss/app.scss', 'resources/js/app.js'],
             refresh: true,
-            fonts: [
-                bunny('Instrument Sans', {
-                    weights: [400, 500, 600],
-                }),
-            ],
         }),
-        tailwindcss(),
     ],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                // Don't warn about deprecations inside node_modules (e.g. the Inter font's own Sass sources).
+                quietDeps: true,
+            },
+        },
+    },
+    build: {
+        // Chart.js is lazy-loaded as its own chunk (only pages with a chart download it); keep the warning quiet.
+        chunkSizeWarningLimit: 600,
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

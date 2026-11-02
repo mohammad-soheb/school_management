@@ -1,0 +1,162 @@
+// ============================================================================
+// Print layout (receipts, report cards, certificates, ID cards)
+//   body.print-body > .print-toolbar.no-print + main.paper.paper-{a4|a5|a6|card}
+// ----------------------------------------------------------------------------
+// On screen the document is a white "sheet" of the right proportions on a grey
+// desk; when printed only the sheet remains, with colours preserved.
+// Named pages (`@page a5 {...}` + `page: a5`) give every paper size its own
+// @page box without any inline <style>, so it works under a strict CSP.
+// Module-specific print rules (receipt, report card ...) belong in
+// resources/scss/modules/_fees.scss, _exams.scss, _certificates.scss.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@page {
+  margin: 12mm;
+}
+
+@page a4 {
+  size: A4 portrait;
+  margin: 12mm;
+}
+
+@page a5 {
+  size: A5 portrait;
+  margin: 10mm;
+}
+
+@page a6 {
+  size: A6 portrait;
+  margin: 6mm;
+}
+
+// CR80 ID card, landscape.
+@page card {
+  size: 85.6mm 54mm;
+  margin: 0;
+}
+
+@layer components {
+  .print-body {
+    @apply min-h-screen bg-line text-ink;
+  }
+
+  .print-toolbar {
+    @apply sticky top-0 z-30 border-b border-line bg-surface/90 backdrop-blur-md;
+  }
+
+  .print-toolbar-inner {
+    @apply mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3;
+  }
+
+  .print-title {
+    @apply min-w-0 flex-1 truncate text-sm font-semibold text-ink;
+  }
+
+  .print-desk {
+    @apply px-3 py-6 sm:py-10;
+  }
+
+  // ---- The sheet ---------------------------------------------------------------
+  // Always light, whatever the app theme is.
+  .paper {
+    @apply mx-auto box-border max-w-full bg-white text-slate-900 shadow-pop;
+
+    --paper-pad: 12mm;
+
+    padding: var(--paper-pad);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    color-scheme: light;
+  }
+
+  .paper-a4 {
+    width: 210mm;
+    min-height: 297mm;
+    page: a4;
+  }
+
+  .paper-a5 {
+    width: 148mm;
+    min-height: 210mm;
+    page: a5;
+    --paper-pad: 10mm;
+  }
+
+  .paper-a6 {
+    width: 105mm;
+    min-height: 148mm;
+    page: a6;
+    --paper-pad: 6mm;
+  }
+
+  .paper-card {
+    width: 85.6mm;
+    min-height: 54mm;
+    page: card;
+    --paper-pad: 0;
+    border-radius: 3mm;
+    overflow: hidden;
+  }
+
+  // Helpers for document authors.
+  .print-break-after {
+    break-after: page;
+  }
+
+  .print-avoid-break {
+    break-inside: avoid;
+  }
+
+  // ---- Printing -------------------------------------------------------------------
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+
+    html,
+    body,
+    .print-body {
+      background: #fff !important;
+      color: #000;
+    }
+
+    .print-desk {
+      padding: 0;
+    }
+
+    .paper {
+      width: auto !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      max-width: none !important;
+      box-shadow: none !important;
+      border-radius: 0;
+    }
+
+    // Links print as plain text unless a document opts in.
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    // Don't split table rows across pages.
+    tr,
+    img {
+      break-inside: avoid;
+    }
+
+    thead {
+      display: table-header-group;
+    }
+  }
+}
+
+// Anything marked .no-print is hidden on paper in every layout, not only the print layout.
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

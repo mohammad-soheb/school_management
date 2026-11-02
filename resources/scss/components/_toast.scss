@@ -1,0 +1,54 @@
+// ============================================================================
+// Toasts   .toast-region > .toast.toast-{tone}
+// Rendered by ui/toasts.blade.php (flash messages) and pushed from JS with
+//   window.dispatchEvent(new CustomEvent('toast', { detail: { tone, message } }))
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .toast-region {
+    @apply pointer-events-none fixed inset-x-0 bottom-0 z-[70] flex flex-col items-center gap-2 p-4 sm:items-end sm:p-6;
+    @apply pb-[max(1rem,env(safe-area-inset-bottom))];
+  }
+
+  .toast {
+    @apply pointer-events-auto flex w-full items-start gap-3 rounded-xl border border-line bg-surface-raised p-3.5 text-sm shadow-pop sm:w-[24rem];
+    @apply animate-toast-in;
+  }
+
+  .toast-icon {
+    @apply mt-px flex h-6 w-6 shrink-0 items-center justify-center rounded-full;
+
+    svg {
+      @apply h-4 w-4;
+    }
+  }
+
+  .toast-title {
+    @apply font-semibold leading-5 text-ink;
+  }
+
+  .toast-message {
+    @apply leading-5 text-ink-soft;
+  }
+
+  .toast-title + .toast-message {
+    @apply mt-0.5;
+  }
+
+  .toast-close {
+    @apply -mr-1 -mt-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-ink-faint transition duration-150 hover:bg-surface-muted hover:text-ink;
+    @include focus-ring(1px);
+
+    svg {
+      @apply h-4 w-4;
+    }
+  }
+
+  @each $name, $_ in $tones {
+    .toast-#{$name} .toast-icon {
+      @apply #{tone($name, 'soft')} #{tone($name, 'ink')};
+    }
+  }
+}

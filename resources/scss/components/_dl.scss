@@ -1,0 +1,47 @@
+// ============================================================================
+// Description list   dl.dl > .dl-item > dt.dl-term + dd.dl-desc
+// Label/value pairs on detail pages. Stacked on phones, side by side from `sm`.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .dl {
+    @apply divide-y divide-line text-sm;
+  }
+
+  .dl-item {
+    @apply grid grid-cols-1 gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4;
+  }
+
+  .dl-term {
+    @apply text-sm font-medium text-ink-soft;
+  }
+
+  .dl-desc {
+    @apply min-w-0 break-words text-sm text-ink sm:col-span-2;
+
+    &:empty::before {
+      content: '\2014';
+
+      @apply text-ink-faint;
+    }
+  }
+
+  // Two-column grid of compact key/values (summary cards).
+  .dl-grid {
+    @apply grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3;
+
+    .dl-item {
+      @apply block p-0;
+    }
+
+    .dl-term {
+      @apply text-xs font-medium uppercase tracking-wide text-ink-faint;
+    }
+
+    .dl-desc {
+      @apply mt-1 block text-sm font-medium;
+    }
+  }
+}

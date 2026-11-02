@@ -1,0 +1,70 @@
+// ============================================================================
+// Stat tile   .stat > .stat-icon.stat-icon-{tone} + .stat-label + .stat-value + .stat-hint
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .stat {
+    @apply relative flex items-start gap-4 rounded-2xl border border-line bg-surface p-5 shadow-card;
+  }
+
+  a.stat {
+    @apply transition duration-150 ease-out;
+    @include focus-ring;
+
+    &:hover {
+      @apply -translate-y-0.5 border-line-strong shadow-pop;
+    }
+  }
+
+  .stat-icon {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-inset;
+
+    svg {
+      @apply h-5 w-5;
+    }
+  }
+
+  @each $name, $_ in $tones {
+    .stat-icon-#{$name} {
+      @apply #{tone($name, 'soft')} #{tone($name, 'ink')} #{tone($name, 'ring')};
+    }
+  }
+
+  .stat-body {
+    @apply min-w-0 flex-1;
+  }
+
+  .stat-label {
+    @apply truncate text-sm font-medium text-ink-soft;
+  }
+
+  .stat-value {
+    @apply mt-1 text-2xl font-semibold leading-8 tracking-tight tabular-nums text-ink;
+  }
+
+  .stat-hint {
+    @apply mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-ink-faint;
+  }
+
+  .stat-delta {
+    @apply inline-flex items-center gap-0.5 text-xs font-semibold tabular-nums;
+
+    svg {
+      @apply h-3.5 w-3.5;
+    }
+
+    &.is-up {
+      @apply text-success-ink;
+    }
+
+    &.is-down {
+      @apply text-danger-ink;
+    }
+
+    &.is-flat {
+      @apply text-ink-faint;
+    }
+  }
+}

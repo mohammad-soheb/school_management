@@ -2,24 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
+     *
+     * Production: only the Super Admin (PLATFORM_ADMIN_* in .env). Local: also two synthetic demo schools so every
+     * screen has data to show. Demo data is fake - never put a real student in it.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call(PlatformAdminSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        if (app()->environment('local')) {
+            $this->call(DemoSeeder::class);
+        }
     }
 }

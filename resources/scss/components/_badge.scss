@@ -1,0 +1,87 @@
+// ============================================================================
+// Badge   .badge + .badge-{neutral|brand|success|warning|danger|info} [+ .badge-dot]
+// Alert   .alert + .alert-{tone}
+// Both are generated from the $tones map in abstracts/_tokens.scss.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .badge {
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium leading-5 ring-1 ring-inset;
+
+    svg {
+      @apply h-3 w-3 shrink-0;
+    }
+  }
+
+  // Leading status dot: inherits the badge ink colour.
+  .badge-dot::before {
+    content: '';
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 9999px;
+    background-color: currentColor;
+    flex-shrink: 0;
+  }
+
+  @each $name, $_ in $tones {
+    .badge-#{$name} {
+      @apply #{tone($name, 'soft')} #{tone($name, 'ink')} #{tone($name, 'ring')};
+    }
+  }
+
+  // ---- Alert ---------------------------------------------------------------
+  .alert {
+    @apply flex gap-3 rounded-xl border p-4 text-sm;
+  }
+
+  .alert-icon {
+    @apply mt-0.5 h-5 w-5 shrink-0;
+  }
+
+  .alert-title {
+    @apply font-semibold leading-5;
+  }
+
+  .alert-body {
+    @apply min-w-0 flex-1 leading-5;
+
+    > * + * {
+      @apply mt-1;
+    }
+  }
+
+  .alert-close {
+    @apply -mr-1 -mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg opacity-70 transition duration-150;
+    @apply hover:bg-ink/5 hover:opacity-100;
+    @include focus-ring(1px);
+
+    svg {
+      @apply h-4 w-4;
+    }
+  }
+
+  @each $name, $_ in $tones {
+    .alert-#{$name} {
+      @apply #{tone($name, 'soft')} #{tone($name, 'edge')};
+
+      .alert-icon,
+      .alert-title,
+      .alert-close {
+        @apply #{tone($name, 'ink')};
+      }
+
+      .alert-body {
+        @apply text-ink;
+      }
+    }
+  }
+
+  // Small solid dot used in legends / lists.
+  @each $name, $_ in $tones {
+    .dot-#{$name} {
+      @apply inline-block h-2 w-2 shrink-0 rounded-full #{tone($name, 'solid')};
+    }
+  }
+}

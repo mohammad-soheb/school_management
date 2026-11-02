@@ -1,0 +1,238 @@
+// ============================================================================
+// App shell (school area + platform backoffice)
+// ----------------------------------------------------------------------------
+//   .app-shell
+//     .app-sidebar   (fixed column from `lg`, off-canvas drawer below)
+//       .app-brand / .app-switcher   school identity + school switcher
+//       .app-nav > .nav-group > .nav-link
+//     .app-main
+//       .app-topbar  (sticky, translucent + blurred)
+//       .app-content > .app-content-inner
+// Markup: resources/views/components/layouts/partials/shell.blade.php
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-brand-600 focus:px-4 focus:py-2.5 focus:text-sm focus:font-medium focus:text-white focus:shadow-pop;
+  }
+
+  // A faint brand glow behind the top of the content (same token-free colour works in both themes).
+  .app-body {
+    background-image: radial-gradient(56rem 26rem at 75% -12rem, rgb(99 102 241 / 0.09), transparent 70%);
+    background-repeat: no-repeat;
+  }
+
+  .app-shell {
+    @apply min-h-screen;
+  }
+
+  // ---- Sidebar -----------------------------------------------------------------
+  .app-sidebar {
+    @apply fixed inset-y-0 left-0 z-40 flex w-[var(--sidebar-w)] max-w-[88vw] flex-col border-r border-line bg-surface;
+
+    // Closed drawer (phones / tablets): slid out and removed from the tab order until opened.
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition:
+      transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.26s;
+
+    &.is-open {
+      transform: none;
+      visibility: visible;
+      transition-delay: 0s;
+
+      @apply shadow-pop;
+    }
+
+    @include bp(lg) {
+      transform: none;
+      visibility: visible;
+      transition: none;
+      box-shadow: none;
+    }
+  }
+
+  .app-backdrop {
+    @apply fixed inset-0 z-30 bg-scrim/50 backdrop-blur-[2px] lg:hidden;
+  }
+
+  .app-sidebar-head {
+    @apply flex h-[var(--topbar-h)] shrink-0 items-center border-b border-line px-3;
+  }
+
+  .app-brand {
+    @apply flex min-w-0 flex-1 items-center gap-3 rounded-xl px-2 py-1.5 text-left;
+  }
+
+  button.app-brand {
+    @apply w-full transition-colors duration-150 hover:bg-surface-muted;
+    @include focus-ring(1px);
+  }
+
+  .brand-tile {
+    @apply flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 text-sm font-semibold text-white shadow-glow;
+
+    img {
+      @apply h-full w-full bg-white object-contain;
+    }
+  }
+
+  .brand-name {
+    @apply block truncate text-sm font-semibold leading-5 text-ink;
+  }
+
+  .brand-sub {
+    @apply block truncate text-xs leading-4 text-ink-faint;
+  }
+
+  // ---- Navigation ----------------------------------------------------------------
+  .app-nav {
+    @apply flex-1 overflow-y-auto overscroll-contain px-3 py-4;
+    @include thin-scrollbar;
+  }
+
+  .nav-group + .nav-group {
+    @apply mt-6;
+  }
+
+  .nav-group-label {
+    @apply mb-1.5 px-3 text-2xs font-semibold uppercase text-ink-faint;
+  }
+
+  .nav-link {
+    @apply relative flex min-h-[2.5rem] items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-ink-soft transition-colors duration-150;
+    @apply hover:bg-surface-muted hover:text-ink;
+    @include focus-ring(-2px);
+
+    svg {
+      @apply h-5 w-5 shrink-0 text-ink-faint transition-colors duration-150;
+    }
+
+    &:hover svg {
+      @apply text-ink-soft;
+    }
+
+    &.is-active {
+      @apply bg-brand-500/10 font-semibold text-brand-ink ring-1 ring-inset ring-brand-500/15;
+
+      svg {
+        @apply text-brand-ink;
+      }
+
+      // Accent bar hugging the sidebar edge.
+      &::before {
+        content: '';
+        position: absolute;
+        left: -0.75rem;
+        top: 50%;
+        width: 0.25rem;
+        height: 1.25rem;
+        transform: translateY(-50%);
+        border-radius: 0 9999px 9999px 0;
+        background-color: rgb(99 102 241);
+      }
+    }
+  }
+
+  .nav-badge {
+    @apply ml-auto inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-brand-500 px-1.5 text-2xs font-semibold leading-5 text-white;
+  }
+
+  .app-sidebar-foot {
+    @apply flex shrink-0 items-center gap-2.5 border-t border-line px-5 py-3 text-xs text-ink-faint;
+
+    svg {
+      @apply h-4 w-4 shrink-0;
+    }
+
+    strong {
+      @apply font-semibold text-ink-soft;
+    }
+  }
+
+  // ---- Main column + topbar -----------------------------------------------------------
+  .app-main {
+    @apply flex min-h-screen min-w-0 flex-col;
+
+    @include bp(lg) {
+      padding-left: var(--sidebar-w);
+    }
+  }
+
+  .app-topbar {
+    @apply sticky top-0 z-30 flex h-[var(--topbar-h)] shrink-0 items-center gap-2 border-b border-line px-3 sm:gap-3 sm:px-6 lg:px-8;
+    @include frosted;
+  }
+
+  .app-search {
+    @apply relative min-w-0 max-w-md flex-1;
+
+    > svg {
+      @apply pointer-events-none absolute left-3.5 top-1/2 h-[1.125rem] w-[1.125rem] -translate-y-1/2 text-ink-faint;
+    }
+
+    .input {
+      @apply h-10 rounded-xl border-transparent bg-surface-muted pl-10 pr-10 shadow-none sm:h-10;
+
+      &:focus {
+        @apply border-focus bg-field;
+      }
+    }
+
+    kbd {
+      @apply pointer-events-none absolute right-2.5 top-1/2 hidden h-5 min-w-[1.25rem] -translate-y-1/2 items-center justify-center rounded-md border border-line-strong bg-surface px-1 font-sans text-2xs font-medium text-ink-faint md:inline-flex;
+    }
+  }
+
+  .app-topbar-actions {
+    @apply ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2;
+  }
+
+  .app-content {
+    @apply flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .app-content-inner {
+    @apply mx-auto w-full max-w-content;
+  }
+
+  .app-footer {
+    @apply px-4 pb-6 text-center text-xs text-ink-faint sm:px-6 lg:px-8;
+  }
+
+  // The user chip in the topbar.
+  .user-chip {
+    @apply flex items-center gap-2.5 rounded-xl p-1 pr-2 text-left transition-colors duration-150 hover:bg-surface-muted;
+    @include focus-ring(1px);
+  }
+
+  // Theme toggle (sun / moon).
+  .icon-btn {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-ink-soft transition duration-150 hover:bg-surface-muted hover:text-ink;
+    @include focus-ring(1px);
+
+    svg {
+      @apply h-5 w-5;
+    }
+  }
+
+  @media print {
+    .app-sidebar,
+    .app-topbar,
+    .app-backdrop,
+    .toast-region {
+      display: none !important;
+    }
+
+    .app-main {
+      padding-left: 0;
+    }
+  }
+}

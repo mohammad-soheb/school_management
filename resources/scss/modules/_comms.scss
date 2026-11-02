@@ -1,0 +1,73 @@
+// ============================================================================
+// Module styles: comms (homework & notices)
+// ----------------------------------------------------------------------------
+// Owned by the homework & notices module. Tokens only (dark mode follows).
+// ============================================================================
+@use '../abstracts' as *;
+
+@layer components {
+    // User-written plain text (homework instructions, notice bodies): escaped server-side, line breaks via nl2br.
+    .comms-body {
+        @apply break-words text-[15px] leading-relaxed text-ink;
+    }
+
+    .comms-body-clamp {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
+    }
+
+    // A notice card on the board; pinned notices get a brand accent.
+    .comms-notice {
+        @apply p-4 sm:p-5;
+
+        &.is-pinned {
+            @apply border-l-4 border-l-brand-500;
+        }
+    }
+
+    // Audience choice tiles (radio cards).
+    .comms-choice {
+        @apply flex min-h-[3.5rem] cursor-pointer items-start gap-3 rounded-xl border border-line bg-surface p-3 transition-colors;
+
+        &:hover {
+            @apply border-line-strong;
+        }
+
+        &.is-selected,
+        &:has(input:checked) {
+            @apply border-brand-500 bg-brand-500/10;
+        }
+
+        input {
+            @apply mt-0.5;
+        }
+    }
+
+    .comms-checklist {
+        @apply max-h-64 overflow-y-auto rounded-xl border border-line px-3 py-1;
+    }
+
+    // Existing attachments list in edit forms.
+    .comms-files {
+        @apply divide-y divide-line rounded-xl border border-line;
+    }
+
+    .comms-file {
+        @apply flex items-center gap-3 px-3 py-1;
+    }
+
+    // Small calendar tile for due dates (dashboard widget).
+    .comms-date {
+        @apply flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg bg-surface-muted leading-none;
+    }
+
+    .comms-date-day {
+        @apply text-base font-semibold text-ink;
+    }
+
+    .comms-date-month {
+        @apply mt-0.5 text-[10px] font-medium uppercase tracking-wide text-ink-faint;
+    }
+}

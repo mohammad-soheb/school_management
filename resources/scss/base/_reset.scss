@@ -1,0 +1,145 @@
+// ============================================================================
+// Base layer: document defaults, typography, focus, selection, scrollbars,
+// reduced motion, forced colours. Element-level styles only -- class based
+// components live in ../components.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer base {
+  html {
+    @apply h-full scroll-smooth antialiased;
+
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    // Inter stylistic sets: single-storey 'a' off, open digits, round quotes. Tabular numbers are opt-in (`tabular-nums`).
+    font-feature-settings: 'cv11', 'ss03';
+    scrollbar-color: rgb(var(--c-line-strong)) transparent;
+    // Keep the layout from shifting when a modal locks the page scroll.
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply min-h-full bg-canvas font-sans text-sm leading-normal text-ink;
+
+    text-rendering: optimizeLegibility;
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-tight text-ink;
+
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    @apply transition-colors duration-150;
+  }
+
+  hr {
+    @apply border-line;
+  }
+
+  // Numbers in money / count columns should line up.
+  table,
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    @apply font-mono text-[0.8125rem];
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    @apply max-w-full;
+  }
+
+  // Never leave a keyboard user guessing. Components that draw their own ring (inputs) refine this.
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-focus));
+    outline-offset: 2px;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    @apply bg-brand-500/20 text-ink;
+  }
+
+  ::placeholder {
+    @apply text-ink-faint opacity-100;
+  }
+
+  // Alpine: hide until initialised.
+  [x-cloak] {
+    display: none !important;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  // Native widgets (date picker, scrollbars) follow the theme via `color-scheme` set in _root.scss.
+  input[type='search']::-webkit-search-cancel-button {
+    @apply cursor-pointer opacity-60;
+  }
+
+  // Autofill should not paint a clashing yellow/blue box on our inputs.
+  input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-text-fill-color: rgb(var(--c-ink));
+    caret-color: rgb(var(--c-ink));
+    transition: background-color 9999s ease-out;
+  }
+
+  @include reduced-motion {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .btn,
+    .input,
+    .select,
+    .textarea,
+    .badge,
+    .card {
+      border: 1px solid CanvasText;
+    }
+  }
+}
+
+@layer utilities {
+  .scroll-thin {
+    @include thin-scrollbar;
+  }
+
+  // The first/last child of a card body shouldn't add extra margin.
+  .flow > * + * {
+    @apply mt-4;
+  }
+}

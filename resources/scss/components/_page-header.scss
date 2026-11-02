@@ -1,0 +1,53 @@
+// ============================================================================
+// Page header   .page-header > .breadcrumb + .page-header-row > (.page-title/.page-description | .page-actions)
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .page-header {
+    @apply mb-6;
+  }
+
+  .page-header-row {
+    @apply flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between;
+  }
+
+  .page-title {
+    @apply text-2xl font-semibold leading-8 tracking-tight text-ink sm:text-[1.75rem] sm:leading-9;
+  }
+
+  .page-description {
+    @apply mt-1 max-w-2xl text-sm text-ink-soft;
+  }
+
+  .page-actions {
+    @apply flex flex-wrap items-center gap-2 sm:justify-end;
+  }
+
+  // ---- Breadcrumb ------------------------------------------------------------
+  .breadcrumb {
+    @apply mb-2 flex flex-wrap items-center gap-1 text-xs font-medium text-ink-faint;
+
+    ol {
+      @apply flex flex-wrap items-center gap-1;
+    }
+
+    li {
+      @apply inline-flex items-center gap-1;
+    }
+
+    svg {
+      @apply h-3.5 w-3.5 text-line-strong;
+    }
+
+    a {
+      @apply rounded px-0.5 text-ink-soft transition-colors duration-150 hover:text-brand-ink;
+      @include focus-ring(1px);
+    }
+
+    [aria-current='page'] {
+      @apply text-ink-faint;
+    }
+  }
+}

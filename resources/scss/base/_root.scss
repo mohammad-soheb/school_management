@@ -1,0 +1,42 @@
+// ============================================================================
+// Design tokens -> CSS custom properties
+// ----------------------------------------------------------------------------
+// :root          light palette (default)
+// .dark          dark palette (class on <html>, set before first paint by the
+//                inline script in layouts/partials/head.blade.php)
+// .theme-light   force the light palette inside a dark page (print sheets)
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@mixin emit-palette($palette, $shadows) {
+  @each $name, $value in $palette {
+    --#{$name}: #{$value};
+  }
+
+  @each $name, $value in $shadows {
+    --#{$name}: #{$value};
+  }
+}
+
+:root {
+  @include emit-palette($light, $shadows-light);
+
+  @each $name, $value in $layout {
+    --#{$name}: #{$value};
+  }
+
+  color-scheme: light;
+}
+
+.dark {
+  @include emit-palette($dark, $shadows-dark);
+
+  color-scheme: dark;
+}
+
+.theme-light {
+  @include emit-palette($light, $shadows-light);
+
+  color-scheme: light;
+}

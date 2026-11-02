@@ -1,0 +1,146 @@
+// ============================================================================
+// Modal   .modal-root > .modal-backdrop + .modal-panel.modal-{sm|md|lg|xl}
+// Dropdown .dropdown > .dropdown-panel > .dropdown-item
+// Both are driven by Alpine (see ui/modal.blade.php, ui/dropdown.blade.php).
+// On phones a modal is a bottom sheet; from `sm` up it is centred.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .modal-root {
+    @apply fixed inset-0 z-[60] flex items-end justify-center sm:items-center sm:p-6;
+  }
+
+  .modal-backdrop {
+    @apply absolute inset-0 bg-scrim/50 backdrop-blur-[2px];
+  }
+
+  .modal-panel {
+    @apply relative flex max-h-[min(92dvh,48rem)] w-full flex-col overflow-hidden rounded-t-3xl border border-line bg-surface-raised shadow-pop sm:rounded-2xl;
+    @apply pb-safe sm:pb-0;
+  }
+
+  .modal-sm {
+    @apply sm:max-w-sm;
+  }
+
+  .modal-md {
+    @apply sm:max-w-lg;
+  }
+
+  .modal-lg {
+    @apply sm:max-w-2xl;
+  }
+
+  .modal-xl {
+    @apply sm:max-w-4xl;
+  }
+
+  .modal-header {
+    @apply flex items-start justify-between gap-4 px-5 pb-2 pt-5 sm:px-6;
+  }
+
+  .modal-title {
+    @apply text-lg font-semibold tracking-tight text-ink;
+  }
+
+  .modal-description {
+    @apply mt-1 text-sm text-ink-soft;
+  }
+
+  .modal-close {
+    @apply -mr-2 -mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-ink-faint transition duration-150;
+    @apply hover:bg-surface-muted hover:text-ink;
+    @include focus-ring(1px);
+
+    svg {
+      @apply h-5 w-5;
+    }
+  }
+
+  .modal-body {
+    @apply min-h-0 flex-1 overflow-y-auto px-5 py-3 sm:px-6;
+    @include thin-scrollbar;
+  }
+
+  .modal-footer {
+    @apply flex flex-col-reverse gap-2 px-5 pb-5 pt-4 sm:flex-row sm:justify-end sm:px-6;
+
+    .btn {
+      @apply w-full sm:w-auto;
+    }
+  }
+
+  // Round tinted icon at the start of a confirm dialog.
+  .modal-icon {
+    @apply flex h-11 w-11 items-center justify-center rounded-full;
+
+    svg {
+      @apply h-6 w-6;
+    }
+  }
+
+  @each $name, $_ in $tones {
+    .modal-icon-#{$name} {
+      @apply #{tone($name, 'soft')} #{tone($name, 'ink')};
+    }
+  }
+
+  // ---- Dropdown --------------------------------------------------------------
+  .dropdown {
+    @apply relative inline-block text-left;
+  }
+
+  .dropdown-panel {
+    @apply absolute z-50 mt-2 min-w-[12rem] origin-top-right rounded-xl border border-line bg-surface-raised p-1.5 shadow-pop;
+
+    &.is-left {
+      @apply left-0 origin-top-left;
+    }
+
+    &.is-right {
+      @apply right-0 origin-top-right;
+    }
+  }
+
+  .dropdown-item {
+    @apply flex w-full min-h-[2.25rem] items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-ink-soft transition-colors duration-100;
+    @apply hover:bg-surface-muted hover:text-ink focus-visible:bg-surface-muted focus-visible:text-ink;
+
+    outline: none;
+
+    svg {
+      @apply h-[1.125rem] w-[1.125rem] shrink-0 text-ink-faint;
+    }
+
+    &:hover svg,
+    &:focus-visible svg {
+      @apply text-ink-soft;
+    }
+  }
+
+  .dropdown-item-danger {
+    @apply text-danger-ink hover:bg-danger/10 hover:text-danger-ink focus-visible:bg-danger/10 focus-visible:text-danger-ink;
+
+    svg,
+    &:hover svg,
+    &:focus-visible svg {
+      @apply text-danger-ink;
+    }
+  }
+
+  .dropdown-divider {
+    @apply -mx-1.5 my-1.5 h-px border-0 bg-line;
+  }
+
+  .dropdown-label {
+    @apply px-3 pb-1 pt-2 text-2xs font-semibold uppercase text-ink-faint;
+  }
+
+  @include coarse {
+    .dropdown-item {
+      @apply min-h-touch;
+    }
+  }
+}

@@ -1,0 +1,164 @@
+// ============================================================================
+// Design tokens
+// ----------------------------------------------------------------------------
+// Single source of truth for every colour that changes between light and dark
+// mode. `base/_root.scss` turns these maps into CSS custom properties; the
+// names are mirrored in tailwind.config.js (`bg-surface`, `text-ink-soft`,
+// `border-line`, `bg-success/10` ...). Values are "R G B" triplets so Tailwind
+// can add an alpha channel: rgb(var(--c-ink) / 0.5).
+//
+// Tune a value here and the whole UI follows. Keep the key names stable --
+// Blade views and tailwind.config.js depend on them.
+// ============================================================================
+
+@use 'sass:map';
+
+// ---- Light --------------------------------------------------------------
+$light: (
+  // Page + surfaces
+  'c-canvas':         (246 247 251),   // app background
+  'c-surface':        (255 255 255),   // cards, tables, dropdowns
+  'c-surface-muted':  (243 245 249),   // table headers, hover rows, inset areas
+  'c-surface-raised': (255 255 255),   // popovers, modals, toasts
+  'c-field':          (255 255 255),   // text inputs / selects
+  // Lines
+  'c-line':           (228 232 240),   // hairline borders
+  'c-line-strong':    (203 210 224),   // input borders, dividers that must be seen
+  // Text
+  'c-ink':            (17 24 39),
+  'c-ink-soft':       (71 80 97),
+  'c-ink-faint':      (98 107 124),
+  // Brand
+  'c-brand-ink':      (67 56 202),     // brand coloured text on surfaces (indigo-700)
+  'c-focus':          (79 70 229),     // focus rings (indigo-600)
+  'c-scrim':          (15 23 42),      // modal / drawer backdrop
+  // Status: fill colour + readable ink for text on a tint of that fill
+  'c-success':        (16 185 129),
+  'c-success-ink':    (4 120 87),
+  'c-warning':        (245 158 11),
+  'c-warning-ink':    (146 64 14),
+  'c-danger':         (244 63 94),
+  'c-danger-ink':     (190 18 60),
+  'c-info':           (14 165 233),
+  'c-info-ink':       (3 105 161),
+);
+
+// ---- Dark ---------------------------------------------------------------
+$dark: (
+  'c-canvas':         (9 12 20),
+  'c-surface':        (17 22 35),
+  'c-surface-muted':  (24 31 48),
+  'c-surface-raised': (28 36 56),
+  'c-field':          (12 17 28),
+  'c-line':           (38 47 68),
+  'c-line-strong':    (62 74 102),
+  'c-ink':            (237 241 247),
+  'c-ink-soft':       (170 182 202),
+  'c-ink-faint':      (132 145 168),
+  'c-brand-ink':      (165 180 252),   // indigo-300
+  'c-focus':          (129 140 248),   // indigo-400
+  'c-scrim':          (0 0 0),
+  'c-success':        (16 185 129),
+  'c-success-ink':    (52 211 153),
+  'c-warning':        (245 158 11),
+  'c-warning-ink':    (251 191 36),
+  'c-danger':         (244 63 94),
+  'c-danger-ink':     (251 113 133),
+  'c-info':           (14 165 233),
+  'c-info-ink':       (56 189 248),
+);
+
+// ---- Shadows (strings, so Tailwind's `shadow-card` etc. can reference them)
+$shadows-light: (
+  'shadow-card': '0 1px 2px 0 rgb(16 24 40 / 0.04), 0 1px 3px 0 rgb(16 24 40 / 0.06)',
+  'shadow-pop':  '0 12px 32px -8px rgb(16 24 40 / 0.18), 0 4px 12px -4px rgb(16 24 40 / 0.08)',
+  'shadow-glow': '0 8px 24px -8px rgb(79 70 229 / 0.45)',
+  'shadow-btn':  'inset 0 1px 0 0 rgb(255 255 255 / 0.18), 0 1px 2px 0 rgb(30 27 75 / 0.25)',
+);
+
+$shadows-dark: (
+  'shadow-card': '0 1px 2px 0 rgb(0 0 0 / 0.35), 0 0 0 1px rgb(255 255 255 / 0.015)',
+  'shadow-pop':  '0 16px 40px -8px rgb(0 0 0 / 0.65), 0 4px 12px -4px rgb(0 0 0 / 0.4)',
+  'shadow-glow': '0 8px 28px -8px rgb(99 102 241 / 0.55)',
+  'shadow-btn':  'inset 0 1px 0 0 rgb(255 255 255 / 0.14), 0 1px 2px 0 rgb(0 0 0 / 0.45)',
+);
+
+// ---- Layout dimensions (emitted as custom properties too) ----------------
+$layout: (
+  'sidebar-w': 16.5rem,
+  'topbar-h': 3.75rem,
+  'portal-tabbar-h': 4rem,
+);
+
+// ---- Sanity: both themes must define the same keys ------------------------
+@each $key, $_ in $light {
+  @if not map.has-key($dark, $key) {
+    @error 'tokens: "#{$key}" is missing from the dark palette.';
+  }
+}
+
+@each $key, $_ in $dark {
+  @if not map.has-key($light, $key) {
+    @error 'tokens: "#{$key}" is missing from the light palette.';
+  }
+}
+
+// ---- Tone map used by badge / alert / stat icon / toast / progress loops ---
+// Each tone lists the Tailwind utilities that style it, so the component
+// partials can generate every variant with one @each loop.
+$tones: (
+  'neutral': (
+    'soft':  'bg-surface-muted',
+    'ink':   'text-ink-soft',
+    'ring':  'ring-line-strong',
+    'solid': 'bg-ink-faint',
+    'edge':  'border-line',
+  ),
+  'brand': (
+    'soft':  'bg-brand-500/10',
+    'ink':   'text-brand-ink',
+    'ring':  'ring-brand-500/25',
+    'solid': 'bg-brand-500',
+    'edge':  'border-brand-500/25',
+  ),
+  'success': (
+    'soft':  'bg-success/10',
+    'ink':   'text-success-ink',
+    'ring':  'ring-success/25',
+    'solid': 'bg-success',
+    'edge':  'border-success/30',
+  ),
+  'warning': (
+    'soft':  'bg-warning/10',
+    'ink':   'text-warning-ink',
+    'ring':  'ring-warning/30',
+    'solid': 'bg-warning',
+    'edge':  'border-warning/35',
+  ),
+  'danger': (
+    'soft':  'bg-danger/10',
+    'ink':   'text-danger-ink',
+    'ring':  'ring-danger/25',
+    'solid': 'bg-danger',
+    'edge':  'border-danger/30',
+  ),
+  'info': (
+    'soft':  'bg-info/10',
+    'ink':   'text-info-ink',
+    'ring':  'ring-info/25',
+    'solid': 'bg-info',
+    'edge':  'border-info/30',
+  ),
+);
+
+// Avatar hues (initials fallback) -- deterministic per name, see ui.avatar.
+$avatar-hues: ('indigo', 'sky', 'emerald', 'amber', 'rose', 'violet', 'teal', 'orange');
+
+// Breakpoints mirror Tailwind's defaults (for hand-written media queries).
+$breakpoints: (
+  'sm': 640px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1536px,
+);

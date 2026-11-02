@@ -1,0 +1,169 @@
+// ============================================================================
+// Parent portal layout (mobile first)
+//   .portal-shell
+//     .portal-topbar > .portal-topbar-inner  (school, child switcher, top nav >= lg)
+//     .portal-content
+//     .portal-tabbar > .portal-tab            (bottom tab bar, phones/tablets)
+// 16px base text, >= 44px touch targets, safe-area aware.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .portal-shell {
+    @apply min-h-screen bg-canvas text-base;
+
+    // Room for the fixed tab bar.
+    padding-bottom: calc(var(--portal-tabbar-h) + env(safe-area-inset-bottom));
+
+    @include bp(lg) {
+      padding-bottom: 0;
+    }
+  }
+
+  .portal-topbar {
+    @apply sticky top-0 z-30 border-b border-line pt-safe;
+    @include frosted;
+  }
+
+  .portal-topbar-inner {
+    @apply mx-auto flex h-16 w-full max-w-5xl items-center gap-3 px-4;
+  }
+
+  .portal-brand {
+    @apply flex min-w-0 items-center gap-2.5 text-left;
+
+    .brand-tile {
+      @apply h-9 w-9;
+    }
+  }
+
+  // Desktop navigation (the bottom bar is hidden from `lg`).
+  .portal-nav {
+    @apply ml-6 hidden items-center gap-1 lg:flex;
+  }
+
+  .portal-nav-link {
+    @apply inline-flex min-h-touch items-center gap-2 rounded-xl px-3.5 text-sm font-medium text-ink-soft transition-colors duration-150 hover:bg-surface-muted hover:text-ink;
+    @include focus-ring(1px);
+
+    svg {
+      @apply h-5 w-5;
+    }
+
+    &.is-active {
+      @apply bg-brand-500/10 text-brand-ink;
+    }
+  }
+
+  .portal-actions {
+    @apply ml-auto flex items-center gap-1.5;
+  }
+
+  // Child switcher trigger: avatar + name + class.
+  .child-switch {
+    @apply flex min-h-touch min-w-0 items-center gap-2.5 rounded-xl border border-line-strong bg-surface-raised py-1.5 pl-1.5 pr-3 text-left shadow-card transition-colors duration-150 hover:bg-surface-muted;
+    @include focus-ring(2px);
+  }
+
+  .child-switch-name {
+    @apply block truncate text-sm font-semibold leading-4 text-ink;
+  }
+
+  .child-switch-meta {
+    @apply block truncate text-xs leading-4 text-ink-faint;
+  }
+
+  .portal-content {
+    @apply mx-auto w-full max-w-5xl px-4 py-5 sm:py-8;
+  }
+
+  // ---- Bottom tab bar ----------------------------------------------------------------
+  .portal-tabbar {
+    @apply fixed inset-x-0 bottom-0 z-40 border-t border-line pb-safe lg:hidden;
+    @include frosted;
+  }
+
+  .portal-tabbar-inner {
+    @apply mx-auto flex h-[var(--portal-tabbar-h)] max-w-xl items-stretch;
+  }
+
+  .portal-tab {
+    @apply relative flex min-w-0 flex-1 flex-col items-center justify-center gap-1 px-1 text-2xs font-semibold text-ink-faint transition-colors duration-150;
+    @include focus-ring(-4px);
+
+    svg {
+      @apply h-6 w-6 transition-transform duration-150;
+    }
+
+    span {
+      @apply max-w-full truncate leading-3;
+    }
+
+    &:active svg {
+      @apply scale-90;
+    }
+
+    &.is-active {
+      @apply text-brand-ink;
+
+      // Small pill above the active tab.
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 1.75rem;
+        height: 0.1875rem;
+        transform: translateX(-50%);
+        border-radius: 0 0 9999px 9999px;
+        background-color: rgb(99 102 241);
+      }
+    }
+  }
+
+  // Sheet that lists the tabs that don't fit on the bar ("More").
+  .portal-more {
+    @apply absolute bottom-full right-2 mb-2 w-56 rounded-2xl border border-line bg-surface-raised p-1.5 shadow-pop;
+  }
+
+  // Compact "last updated" line used on portal cards (low-data friendly).
+  .portal-updated {
+    @apply inline-flex items-center gap-1.5 text-xs text-ink-faint;
+
+    svg {
+      @apply h-3.5 w-3.5;
+    }
+  }
+
+  // Larger controls inside the portal.
+  .portal-shell {
+    .btn-md {
+      @apply h-12 px-5 text-base;
+    }
+
+    .btn-sm {
+      @apply h-10 text-sm;
+    }
+
+    .input,
+    .select {
+      @apply h-12 text-base;
+    }
+
+    .tab {
+      @apply min-h-touch;
+    }
+  }
+
+  @media print {
+    .portal-topbar,
+    .portal-tabbar {
+      display: none !important;
+    }
+
+    .portal-shell {
+      padding-bottom: 0;
+    }
+  }
+}

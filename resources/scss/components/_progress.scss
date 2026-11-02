@@ -1,0 +1,77 @@
+// ============================================================================
+// Progress   <progress class="progress progress-{tone}" value max>
+// A native <progress> keeps the semantics (role, value, max) for free and needs
+// no inline style, so it is safe under a strict Content-Security-Policy.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@mixin progress-fill($bg) {
+  &::-webkit-progress-value {
+    border-radius: 9999px;
+    background: $bg;
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  &::-moz-progress-bar {
+    border-radius: 9999px;
+    background: $bg;
+  }
+}
+
+@layer components {
+  .progress {
+    @apply block h-2 w-full appearance-none overflow-hidden rounded-full border-0 bg-line;
+
+    &::-webkit-progress-bar {
+      @apply rounded-full bg-line;
+    }
+
+    // Progress with no value yet = indeterminate: keep the track only.
+    &:indeterminate {
+      @apply animate-pulse;
+    }
+
+    @include progress-fill(rgb(var(--c-ink-faint)));
+  }
+
+  .progress-neutral {
+    @include progress-fill(rgb(var(--c-ink-faint)));
+  }
+
+  .progress-brand {
+    @include progress-fill(linear-gradient(90deg, #6366f1, #4f46e5));
+  }
+
+  .progress-success {
+    @include progress-fill(linear-gradient(90deg, #34d399, #10b981));
+  }
+
+  .progress-warning {
+    @include progress-fill(linear-gradient(90deg, #fbbf24, #f59e0b));
+  }
+
+  .progress-danger {
+    @include progress-fill(linear-gradient(90deg, #fb7185, #f43f5e));
+  }
+
+  .progress-info {
+    @include progress-fill(linear-gradient(90deg, #38bdf8, #0ea5e9));
+  }
+
+  .progress-lg {
+    @apply h-3;
+  }
+
+  .progress-row {
+    @apply flex items-center gap-3;
+
+    .progress {
+      @apply flex-1;
+    }
+  }
+
+  .progress-value {
+    @apply w-11 shrink-0 text-right text-xs font-semibold tabular-nums text-ink-soft;
+  }
+}

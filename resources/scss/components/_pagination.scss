@@ -1,0 +1,57 @@
+// ============================================================================
+// Pagination   nav.pager > .pager-info + ul.pager-list > li > .pager-link
+// Markup lives in resources/views/vendor/pagination/*.blade.php (the paginator's default views).
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .pager {
+    @apply flex flex-col items-center justify-between gap-3 sm:flex-row;
+  }
+
+  .pager-info {
+    @apply text-sm text-ink-soft;
+
+    strong {
+      @apply font-semibold text-ink;
+    }
+  }
+
+  .pager-list {
+    @apply flex flex-wrap items-center justify-center gap-1;
+  }
+
+  .pager-link {
+    @apply inline-flex h-9 min-w-[2.25rem] items-center justify-center gap-1 rounded-lg border border-transparent px-2.5 text-sm font-medium text-ink-soft transition duration-150;
+    @apply hover:bg-surface-muted hover:text-ink;
+    @include focus-ring(1px);
+
+    svg {
+      @apply h-4 w-4;
+    }
+
+    &.is-active {
+      @apply border-brand-500/30 bg-brand-500/10 text-brand-ink;
+    }
+
+    &.is-disabled {
+      @apply pointer-events-none cursor-not-allowed text-ink-faint opacity-50;
+    }
+
+    // Previous / next carry a visible text label from `sm` up.
+    &.is-edge {
+      @apply border-line-strong bg-surface-raised px-3 text-ink shadow-card;
+    }
+  }
+
+  .pager-ellipsis {
+    @apply inline-flex h-9 min-w-[2rem] items-center justify-center text-sm text-ink-faint;
+  }
+
+  @include coarse {
+    .pager-link {
+      @apply h-11 min-w-touch;
+    }
+  }
+}

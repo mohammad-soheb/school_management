@@ -47,6 +47,17 @@ return [
             'report' => false,
         ],
 
+        // Student/guardian/staff documents, homework attachments, imports and exports. Never served by URL:
+        // files are streamed through authorised controllers only (App\Support\Documents\PrivateFileService).
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'visibility' => 'private',
+            'serve' => false,
+            'throw' => true,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

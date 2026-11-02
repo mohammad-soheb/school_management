@@ -1,0 +1,53 @@
+// ============================================================================
+// Empty state   .empty > .empty-icon + .empty-title + .empty-description + .empty-actions
+// Also the "no results" block under filters.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .empty {
+    @apply flex flex-col items-center justify-center px-6 py-14 text-center;
+
+    // Own stacking context so the icon halo (z-index -1) paints above the card behind it.
+    isolation: isolate;
+  }
+
+  // Icon tile with a soft brand halo behind it.
+  .empty-icon {
+    @apply relative mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-line bg-surface text-brand-ink shadow-card;
+
+    background-image: linear-gradient(to bottom, rgb(var(--c-surface)), rgb(var(--c-surface-muted)));
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -0.875rem;
+      z-index: -1;
+      border-radius: 9999px;
+      background: radial-gradient(closest-side, rgb(99 102 241 / 0.14), transparent);
+    }
+
+    svg {
+      @apply h-7 w-7;
+    }
+  }
+
+  .empty-title {
+    @apply text-base font-semibold text-ink;
+  }
+
+  .empty-description {
+    @apply mt-1 max-w-sm text-sm text-ink-soft;
+  }
+
+  .empty-actions {
+    @apply mt-5 flex flex-wrap items-center justify-center gap-2;
+  }
+
+  // Inside a bordered card the empty state sits on the surface itself.
+  .card .empty,
+  .table-wrap + .empty {
+    @apply py-12;
+  }
+}

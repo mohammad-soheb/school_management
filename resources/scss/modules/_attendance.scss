@@ -1,0 +1,245 @@
+// ============================================================================
+// Module styles: attendance
+// ----------------------------------------------------------------------------
+//   .att-row / .att-chips / .att-chip    marking grid (big touch targets, mobile-first)
+//   .att-section-card                    "Today" list of classes
+//   .att-register                        monthly register (students x days), screen + A4 landscape print
+// Colours come from the design tokens, so dark mode works without `dark:` variants.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+// A landscape A4 page for the monthly register (named page, CSP-safe; see layouts/_print.scss).
+@page attendance-register {
+  size: A4 landscape;
+  margin: 8mm;
+}
+
+@layer components {
+  // ---- "Today" list --------------------------------------------------------------
+  .att-section-grid {
+    @apply grid gap-3 sm:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .att-section-card {
+    @apply flex min-h-touch items-center gap-4 rounded-2xl border border-line bg-surface p-4 shadow-card transition duration-150;
+
+    &.is-pending {
+      @apply border-warning/50;
+    }
+  }
+
+  a.att-section-card:hover {
+    @apply border-brand-300 shadow-pop;
+  }
+
+  a.att-section-card:focus-visible {
+    @include focus-ring;
+  }
+
+  .att-section-mark {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-sm font-bold;
+
+    &.is-done {
+      @apply bg-success/15 text-success-ink;
+    }
+
+    &.is-pending {
+      @apply bg-warning/15 text-warning-ink;
+    }
+
+    &.is-empty {
+      @apply bg-surface-muted text-ink-faint;
+    }
+
+    svg {
+      @apply h-6 w-6;
+    }
+  }
+
+  // ---- Date bar -----------------------------------------------------------------------
+  .att-datebar {
+    @apply flex flex-wrap items-end gap-2;
+
+    .field {
+      @apply min-w-[11rem] flex-1 sm:flex-none;
+    }
+  }
+
+  // ---- Live counts ----------------------------------------------------------------------
+  .att-counts {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .att-count {
+    @apply inline-flex min-h-[2rem] items-center gap-1.5 rounded-full border border-line bg-surface px-3 text-sm font-medium text-ink-soft tabular-nums;
+
+    strong {
+      @apply font-semibold text-ink;
+    }
+  }
+
+  // ---- Marking grid ---------------------------------------------------------------------
+  .att-roster {
+    @apply divide-y divide-line;
+  }
+
+  .att-row {
+    @apply flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4;
+
+    &.is-absent {
+      @apply bg-danger/5;
+    }
+
+    &.is-changed {
+      @apply bg-warning/10;
+    }
+  }
+
+  .att-student {
+    @apply flex min-w-0 items-center gap-3;
+  }
+
+  .att-roll {
+    @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-sm font-semibold tabular-nums text-ink-soft;
+  }
+
+  .att-chips {
+    @apply grid grid-cols-5 gap-1.5 sm:flex sm:shrink-0 sm:gap-2;
+  }
+
+  .att-chip {
+    @apply relative block cursor-pointer select-none;
+
+    input {
+      @apply absolute inset-0 h-full w-full cursor-pointer opacity-0;
+    }
+
+    .att-chip-face {
+      @apply flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-line-strong bg-surface px-2 text-sm font-semibold text-ink-soft transition duration-150 sm:px-3;
+    }
+
+    input:hover:not(:disabled) + .att-chip-face {
+      @apply border-ink-faint text-ink;
+    }
+
+    input:focus-visible + .att-chip-face {
+      @include focus-ring;
+    }
+
+    input:disabled {
+      @apply cursor-default;
+    }
+
+    input:checked + .att-chip-face {
+      @apply shadow-sm;
+    }
+
+    &.is-present input:checked + .att-chip-face {
+      @apply border-success bg-success/15 text-success-ink;
+    }
+
+    &.is-absent input:checked + .att-chip-face {
+      @apply border-danger bg-danger/15 text-danger-ink;
+    }
+
+    &.is-late input:checked + .att-chip-face {
+      @apply border-warning bg-warning/15 text-warning-ink;
+    }
+
+    &.is-leave input:checked + .att-chip-face {
+      @apply border-info bg-info/15 text-info-ink;
+    }
+
+    &.is-half_day input:checked + .att-chip-face {
+      @apply border-brand-500 bg-brand-500/15 text-brand-ink;
+    }
+  }
+
+  // Read-only sheet: show only the chosen status.
+  .att-roster.is-readonly .att-chip:has(input:not(:checked)) {
+    @apply hidden;
+  }
+
+  .att-roster.is-readonly .att-chips {
+    @apply flex;
+  }
+
+  .att-remark {
+    @apply mt-1 text-sm text-ink-faint;
+  }
+
+  .att-submitbar {
+    @apply sticky bottom-0 z-20 -mx-4 mt-4 border-t border-line bg-surface/95 px-4 py-3 backdrop-blur-md sm:static sm:mx-0 sm:rounded-2xl sm:border sm:shadow-card;
+  }
+
+  // ---- Monthly register -------------------------------------------------------------------
+  .att-register {
+    @apply w-full border-collapse text-xs tabular-nums;
+
+    th,
+    td {
+      @apply border border-line px-1 py-1 text-center;
+    }
+
+    thead th {
+      @apply bg-surface-muted font-semibold text-ink-soft;
+    }
+
+    .att-register-name {
+      @apply sticky left-0 z-10 min-w-[10rem] bg-surface text-left font-medium text-ink;
+    }
+
+    thead .att-register-name {
+      @apply bg-surface-muted;
+    }
+
+    .is-closed {
+      @apply bg-surface-muted text-ink-faint;
+    }
+
+    .is-A {
+      @apply font-semibold text-danger-ink;
+    }
+
+    .is-L,
+    .is-HD {
+      @apply text-warning-ink;
+    }
+
+    .is-LV {
+      @apply text-info-ink;
+    }
+
+    tfoot td {
+      @apply bg-surface-muted font-semibold text-ink-soft;
+    }
+  }
+
+  .att-register-paper {
+    width: 297mm;
+    min-height: 210mm;
+    page: attendance-register;
+    --paper-pad: 8mm;
+
+    .att-register {
+      font-size: 7.5pt;
+
+      th,
+      td {
+        border-color: #cbd5e1;
+        padding: 1px 2px;
+      }
+
+      .att-register-name {
+        position: static;
+        min-width: 0;
+        background: transparent;
+      }
+    }
+  }
+
+  .att-legend {
+    @apply flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-faint;
+  }
+}

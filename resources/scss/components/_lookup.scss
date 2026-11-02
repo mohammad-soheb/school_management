@@ -1,0 +1,80 @@
+// ============================================================================
+// Lookup (async search-select / combobox)   .lookup > input[role=combobox] + ul.lookup-list
+// Behaviour in resources/js/components/lookup.js
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .lookup {
+    @apply relative;
+  }
+
+  .lookup-control {
+    @apply relative;
+
+    > svg {
+      @apply pointer-events-none absolute left-3.5 top-1/2 h-[1.125rem] w-[1.125rem] -translate-y-1/2 text-ink-faint;
+    }
+
+    .input {
+      @apply pl-10 pr-10;
+    }
+  }
+
+  .lookup-spinner {
+    @apply absolute right-3.5 top-1/2 -mt-2 h-4 w-4 text-brand-ink;
+
+    &::after {
+      @include spinner(1rem, 2px, currentColor);
+    }
+  }
+
+  .lookup-clear {
+    @apply absolute right-1.5 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-ink-faint transition duration-150 hover:bg-surface-muted hover:text-ink;
+    @include focus-ring(1px);
+
+    svg {
+      @apply h-4 w-4;
+    }
+  }
+
+  .lookup-list {
+    @apply absolute z-40 mt-1.5 max-h-72 w-full overflow-auto rounded-xl border border-line bg-surface-raised p-1.5 shadow-pop;
+    @include thin-scrollbar;
+  }
+
+  .lookup-option {
+    @apply flex cursor-pointer flex-col rounded-lg px-3 py-2 text-sm;
+
+    &.is-active,
+    &[aria-selected='true'] {
+      @apply bg-brand-500/10;
+
+      .lookup-option-label {
+        @apply text-brand-ink;
+      }
+    }
+  }
+
+  .lookup-option-label {
+    @apply font-medium text-ink;
+  }
+
+  .lookup-option-sub {
+    @apply text-xs text-ink-faint;
+  }
+
+  .lookup-empty {
+    @apply px-3 py-3 text-sm text-ink-faint;
+  }
+
+  // The chosen record, shown instead of the text box.
+  .lookup-selected {
+    @apply flex min-h-[2.75rem] items-center justify-between gap-3 rounded-xl border border-line-strong bg-field px-3.5 py-2 shadow-sm sm:min-h-[2.5rem];
+
+    &.is-invalid {
+      @apply border-danger;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+// Module partials. Each module agent fills ONLY its own file; this index never needs editing
+// when a partial grows. Add a new module by creating _name.scss and one @forward line below.
+@forward 'setup';
+@forward 'students';
+@forward 'staff';
+@forward 'attendance';
+@forward 'fees';
+@forward 'exams';
+@forward 'comms';
+@forward 'portal';
+@forward 'reports';
+@forward 'import';
+@forward 'subscriptions';
+@forward 'certificates';
+@forward 'promotion';
+@forward 'salary';

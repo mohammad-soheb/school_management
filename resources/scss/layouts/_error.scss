@@ -1,0 +1,56 @@
+// ============================================================================
+// Error pages (403, 404, 419, 429, 500, 503)   resources/views/errors/*.blade.php
+// Standalone: no auth / session / tenant data is needed to render them.
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .error-body {
+    @apply min-h-screen bg-canvas text-ink;
+
+    background-image:
+      radial-gradient(40rem 24rem at 15% -10%, rgb(99 102 241 / 0.16), transparent 70%),
+      radial-gradient(36rem 22rem at 100% 110%, rgb(168 85 247 / 0.14), transparent 70%);
+    background-attachment: fixed;
+  }
+
+  .error-shell {
+    @apply mx-auto flex min-h-screen w-full max-w-lg flex-col items-center justify-center px-5 py-12 text-center;
+  }
+
+  .error-card {
+    @apply w-full rounded-3xl border border-line bg-surface p-8 shadow-pop sm:p-10;
+  }
+
+  .error-icon {
+    @apply mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500/10 text-brand-ink ring-1 ring-inset ring-brand-500/25;
+
+    svg {
+      @apply h-7 w-7;
+    }
+  }
+
+  .error-code {
+    @apply bg-gradient-to-br from-brand-500 to-violet-500 bg-clip-text font-semibold leading-none tracking-tight text-transparent;
+
+    font-size: clamp(3.5rem, 14vw, 5.5rem);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .error-title {
+    @apply mt-4 text-2xl font-semibold tracking-tight text-ink;
+  }
+
+  .error-text {
+    @apply mx-auto mt-2 max-w-sm text-sm leading-relaxed text-ink-soft;
+  }
+
+  .error-actions {
+    @apply mt-8 flex flex-col items-stretch justify-center gap-2 sm:flex-row;
+  }
+
+  .error-foot {
+    @apply mt-6 text-xs text-ink-faint;
+  }
+}

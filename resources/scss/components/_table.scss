@@ -1,0 +1,123 @@
+// ============================================================================
+// Data table   .table-wrap > table.data-table
+// ----------------------------------------------------------------------------
+// The wrapper owns the border, radius and horizontal scroll, so a wide table
+// scrolls inside its own container and never makes the page scroll sideways.
+// Header cells are sticky within the wrapper (give it a max-height to use it).
+// ============================================================================
+
+@use '../abstracts' as *;
+
+@layer components {
+  .table-wrap {
+    @apply overflow-x-auto overscroll-x-contain rounded-2xl border border-line bg-surface shadow-card;
+    @include thin-scrollbar;
+  }
+
+  .table-wrap-tall {
+    @apply max-h-[min(36rem,70vh)] overflow-y-auto;
+  }
+
+  .data-table {
+    @apply w-full min-w-full border-separate border-spacing-0 text-left text-sm;
+
+    thead th {
+      @apply sticky top-0 z-[1] whitespace-nowrap border-b border-line bg-surface-muted px-4 py-3 text-xs font-semibold uppercase tracking-wide text-ink-soft;
+
+      &:first-child {
+        @apply pl-5;
+      }
+
+      &:last-child {
+        @apply pr-5;
+      }
+    }
+
+    tbody td,
+    tbody th {
+      @apply border-b border-line px-4 py-3.5 align-middle text-ink;
+
+      &:first-child {
+        @apply pl-5;
+      }
+
+      &:last-child {
+        @apply pr-5;
+      }
+    }
+
+    tbody th {
+      @apply font-medium;
+    }
+
+    tbody tr {
+      @apply transition-colors duration-100;
+
+      &:hover > * {
+        @apply bg-surface-muted/70;
+      }
+
+      &:last-child > * {
+        @apply border-b-0;
+      }
+
+      &[aria-selected='true'] > * {
+        @apply bg-brand-500/5;
+      }
+    }
+
+    tfoot td,
+    tfoot th {
+      @apply border-t border-line bg-surface-muted px-4 py-3 text-sm font-semibold text-ink;
+    }
+
+    // Right-align numbers / money and keep digits tabular.
+    .num {
+      @apply text-right tabular-nums;
+    }
+
+    // Narrow action column.
+    .col-actions {
+      @apply w-px whitespace-nowrap text-right;
+    }
+
+    // Secondary line under a cell value (class, phone ...).
+    .cell-sub {
+      @apply mt-0.5 block text-xs font-normal text-ink-faint;
+    }
+
+    &.data-table-dense {
+      thead th {
+        @apply py-2;
+      }
+
+      tbody td,
+      tbody th {
+        @apply py-2;
+      }
+    }
+  }
+
+  // Sortable column header link: <x-ui.th>.
+  .th-sort {
+    @apply -mx-1 inline-flex items-center gap-1 rounded-md px-1 py-0.5 transition-colors duration-150 hover:text-ink;
+    @include focus-ring(1px);
+
+    svg {
+      @apply h-3.5 w-3.5 shrink-0 text-ink-faint;
+    }
+
+    &.is-sorted {
+      @apply text-ink;
+
+      svg {
+        @apply text-brand-ink;
+      }
+    }
+  }
+
+  // Table toolbar rendered above a table: result count + bulk actions.
+  .table-toolbar {
+    @apply mb-3 flex flex-wrap items-center justify-between gap-3;
+  }
+}

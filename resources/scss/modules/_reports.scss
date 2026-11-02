@@ -1,0 +1,12 @@
+// ============================================================================
+// Module styles: reports
+// ----------------------------------------------------------------------------
+// Owned by the reports module. Empty on purpose -- add this module's styles here
+// (print layouts, grids ...). Use design tokens and the shared components; wrap
+// class rules in `@layer components { ... }` so @apply and Tailwind's ordering work:
+//
+//   @use '../abstracts' as *;
+//   @layer components {
+//     .reports-example { @apply rounded-xl border border-line bg-surface p-4; }
+//   }
+// ============================================================================

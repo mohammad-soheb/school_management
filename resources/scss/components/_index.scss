@@ -1,0 +1,21 @@
+// All UI components. Each partial wraps its rules in `@layer components` so Tailwind
+// places them between its base styles and its utilities (a utility class always wins).
+@forward 'button';
+@forward 'form';
+@forward 'card';
+@forward 'table';
+@forward 'badge';
+@forward 'modal';
+@forward 'toast';
+@forward 'tabs';
+@forward 'pagination';
+@forward 'avatar';
+@forward 'empty';
+@forward 'stat';
+@forward 'progress';
+@forward 'filters';
+@forward 'dl';
+@forward 'skeleton';
+@forward 'page-header';
+@forward 'chart';
+@forward 'lookup';
